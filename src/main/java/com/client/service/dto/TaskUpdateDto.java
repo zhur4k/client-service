@@ -9,7 +9,6 @@ public record TaskUpdateDto(
         UUID id,
         String title,
         String description,
-        TaskStatus status,
-        LocalDateTime updatedAt
+        TaskStatus status
         ) {
 }

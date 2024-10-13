@@ -24,12 +24,12 @@ public class ClientServiceImpl implements ClientService{
     public Mono<Void> createClient(ClientCreateDto clientCreateDto) {
 
         return Mono.fromRunnable(() -> clientRepository.save(new Client(
-                        UUID.randomUUID(), // Генерируем новый UUID для клиента
+                        UUID.randomUUID(),
                         clientCreateDto.name(),
                         clientCreateDto.email(),
                         clientCreateDto.phone(),
-                        LocalDateTime.now(), // Устанавливаем текущее время для createdAt
-                        LocalDateTime.now()  // Устанавливаем текущее время для updatedAt
+                        LocalDateTime.now(),
+                        LocalDateTime.now()
                 )))
                 .then();
     }
