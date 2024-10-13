@@ -3,5 +3,12 @@ spring:
     compose:
       enabled: true
       lifecycle-management: start_and_stop
+  flyway:
+    enabled: true
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/client_service_db
+#    password: client_service
+#    username: client_service
+#    driver-class-name: org.postgresql.Driver
 server:
   port: 8081
