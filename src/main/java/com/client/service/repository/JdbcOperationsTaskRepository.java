@@ -69,11 +69,11 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
 
     @Override
     public void update(Task task) {
-        System.out.println(task);
         this.jdbcOperations.update("""
-        update t_task set c_title = ?, c_description = ?, c_updated_at = ? where id = ?
+        update t_task set c_title = ?, c_status = ?::task_status, c_description = ?, c_updated_at = ? where id = ?
         """,
                 task.title(),
+                task.status().name(),
                 task.description(),
                 task.updatedAt(),
                 task.id()
