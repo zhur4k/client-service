@@ -1,11 +1,11 @@
 package com.client.service.controller;
 
-import com.client.service.dto.ClientCreateDto;
-import com.client.service.dto.ClientUpdateDto;
 import com.client.service.dto.TaskCreateDto;
 import com.client.service.dto.TaskUpdateDto;
 import com.client.service.model.Task;
 import com.client.service.service.TaskService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("tasks")
+@OpenAPIDefinition(info = @Info(title = "Task Service API", version = "1.0"))
 public class TaskRestController {
 
     private final TaskService taskService;
@@ -34,7 +35,7 @@ public class TaskRestController {
     }
 
     @GetMapping("{id}")
-    public Mono<ResponseEntity<Task>> getClientById(@PathVariable UUID id) {
+    public Mono<ResponseEntity<Task>> getTaskById(@PathVariable UUID id) {
         return taskService.getTaskById(id)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
@@ -42,7 +43,7 @@ public class TaskRestController {
     }
 
     @PostMapping("create")
-    public Mono<ResponseEntity<Object>> createClient(
+    public Mono<ResponseEntity<Object>> createTask(
             @Validated @RequestBody Mono<TaskCreateDto> taskMono
     ){
         return taskMono
@@ -52,7 +53,7 @@ public class TaskRestController {
     }
 
     @PostMapping("update")
-    public Mono<ResponseEntity<Object>> updateClient(
+    public Mono<ResponseEntity<Object>> updateTask(
             @Validated @RequestBody Mono<TaskUpdateDto> taskMono
     ){
         return taskMono
@@ -62,7 +63,7 @@ public class TaskRestController {
     }
 
    @DeleteMapping("{id}")
-   public Mono<ResponseEntity<Object>> deleteClient(
+   public Mono<ResponseEntity<Object>> deleteTask(
            @PathVariable UUID id){
         return taskService.removeTask(id)
                 .then(Mono.just(ResponseEntity.noContent().build()))

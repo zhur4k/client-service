@@ -4,6 +4,8 @@ import com.client.service.dto.ClientCreateDto;
 import com.client.service.dto.ClientUpdateDto;
 import com.client.service.model.Client;
 import com.client.service.service.ClientService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("clients")
+@OpenAPIDefinition(info = @Info(title = "Client Service API", version = "1.0"))
 public class ClientRestController {
 
     private final ClientService clientService;

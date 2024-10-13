@@ -5,6 +5,12 @@ spring:
       lifecycle-management: start_and_stop
   flyway:
     enabled: true
+springdoc:
+  api-docs:
+    path: api/docs
+  swagger-ui:
+    path: /swagger-ui.html
+  packages-to-scan: com.client.service
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/client_service_db
 #    password: client_service
