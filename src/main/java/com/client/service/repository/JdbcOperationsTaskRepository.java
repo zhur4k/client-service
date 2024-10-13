@@ -56,6 +56,19 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     }
 
     @Override
+    public void update(Task task) {
+        jdbcOperations.update("""
+            update t_task set title = ?, description = ?, status = ?, updated_at = ? where id = ?
+        """, new Object[]{
+                task.title(),
+                task.description(),
+                task.status().toString(),
+                task.updatedAt(),
+                task.id()
+        });
+    }
+
+    @Override
     public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Task(rs.getObject("id",UUID.class),
                 rs.getObject("c_user_id",UUID.class),

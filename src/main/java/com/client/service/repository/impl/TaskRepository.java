@@ -15,4 +15,6 @@ public interface TaskRepository {
     Optional<Task> findById(UUID id);
 
     void delete(UUID id);
+
+    void update(Task task);
 }

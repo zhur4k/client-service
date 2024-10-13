@@ -52,6 +52,17 @@ public class JdbcOperationsClientRepository implements ClientRepository, RowMapp
     }
 
     @Override
+    public void update(Client client) {
+        this.jdbcOperations.update("""
+        update t_client set c_name = ?, c_phone = ?, c_updated_at = ? where id = ?
+        """,
+                client.name(),
+                client.phone(),
+                client.updatedAt(),
+                client.id());
+    }
+
+    @Override
     public Client mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Client(rs.getObject("id",UUID.class),
                 rs.getObject("c_name",String.class),

@@ -15,4 +15,6 @@ public interface ClientRepository {
     Optional<Client> findById(UUID id);
 
     void delete(UUID id);
+
+    void update(Client client);
 }
