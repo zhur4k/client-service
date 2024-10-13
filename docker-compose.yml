@@ -4,7 +4,7 @@ services:
     container_name: client_service_container
     environment:
       POSTGRES_DB: client_service_db
-      POSTGRES_USERNAME: client_service
+      POSTGRES_USER: client_service
       POSTGRES_PASSWORD: client_service
     ports:
       - 5432:5432
