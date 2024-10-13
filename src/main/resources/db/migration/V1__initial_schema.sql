@@ -1,6 +1,7 @@
 CREATE TABLE t_client (
     id UUID PRIMARY KEY,
     c_name TEXT,
+    c_email TEXT,
     c_phone TEXT,
     c_created_at TIMESTAMP,
     c_updated_at TIMESTAMP

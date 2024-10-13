@@ -26,6 +26,7 @@ public class ClientServiceImpl implements ClientService{
         return Mono.fromRunnable(() -> clientRepository.save(new Client(
                         UUID.randomUUID(), // Генерируем новый UUID для клиента
                         clientCreateDto.name(),
+                        clientCreateDto.email(),
                         clientCreateDto.phone(),
                         LocalDateTime.now(), // Устанавливаем текущее время для createdAt
                         LocalDateTime.now()  // Устанавливаем текущее время для updatedAt
@@ -54,6 +55,7 @@ public class ClientServiceImpl implements ClientService{
         Client client = new Client(
                 updateDto.id(),
                 updateDto.name(),
+                updateDto.email(),
                 updateDto.phone(),
                 null,
                 LocalDateTime.now()
