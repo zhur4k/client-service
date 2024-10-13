@@ -1,5 +1,6 @@
 package com.client.service.service;
 
+import com.client.service.dto.TaskCreateDto;
 import com.client.service.dto.TaskUpdateDto;
 import com.client.service.model.Client;
 import com.client.service.model.Task;
@@ -21,8 +22,16 @@ public class TaskServiceImpl implements TaskService{
 
 
     @Override
-    public Mono<Void> addTask(Task task) {
-        return Mono.fromRunnable(() -> taskRepository.save(task))
+    public Mono<Void> createTask(TaskCreateDto taskCreateDto) {
+        return Mono.fromRunnable(() -> taskRepository.save(new Task(
+                        UUID.randomUUID(),
+                        taskCreateDto.userId(),
+                        taskCreateDto.title(),
+                        taskCreateDto.description(),
+                        taskCreateDto.status(),
+                        LocalDateTime.now(),
+                        LocalDateTime.now()
+                )))
                 .then();
     }
 

@@ -1,5 +1,6 @@
 package com.client.service.service;
 
+import com.client.service.dto.TaskCreateDto;
 import com.client.service.dto.TaskUpdateDto;
 import com.client.service.model.Task;
 import reactor.core.publisher.Flux;
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 public interface TaskService {
 
-    Mono<Void> addTask(Task task);
+    Mono<Void> createTask(TaskCreateDto taskCreateDto);
 
     Mono<Task> getTaskById(UUID id);
 

@@ -1,5 +1,6 @@
 package com.client.service.service;
 
+import com.client.service.dto.ClientCreateDto;
 import com.client.service.dto.ClientUpdateDto;
 import com.client.service.model.Client;
 import com.client.service.repository.JdbcOperationsClientRepository;
@@ -20,8 +21,15 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Mono<Void> addClient(Client client) {
-        return Mono.fromRunnable(() -> clientRepository.save(client))
+    public Mono<Void> createClient(ClientCreateDto clientCreateDto) {
+
+        return Mono.fromRunnable(() -> clientRepository.save(new Client(
+                        UUID.randomUUID(), // Генерируем новый UUID для клиента
+                        clientCreateDto.name(),
+                        clientCreateDto.phone(),
+                        LocalDateTime.now(), // Устанавливаем текущее время для createdAt
+                        LocalDateTime.now()  // Устанавливаем текущее время для updatedAt
+                )))
                 .then();
     }
 
