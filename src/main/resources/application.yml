@@ -2,19 +2,19 @@ spring:
   docker:
     compose:
       enabled: true
-      lifecycle-management: start_and_stop
+      lifecycle-management: start_only
+  datasource:
+    url: jdbc:postgresql://db_postgres:5432/client_service_db
+    username: client_service
+    password: client_service
+    driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true
 springdoc:
   api-docs:
-    path: api/docs
+    path: /api/docs
   swagger-ui:
     path: /swagger-ui.html
   packages-to-scan: com.client.service
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/client_service_db
-#    password: client_service
-#    username: client_service
-#    driver-class-name: org.postgresql.Driver
 server:
   port: 8081
