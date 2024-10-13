@@ -1,5 +1,6 @@
 package com.client.service.repository.impl;
 
+import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
 
 import java.util.List;
@@ -8,11 +9,11 @@ import java.util.UUID;
 
 public interface TaskRepository {
 
-    List<Task> findAll();
+    List<TaskWithClientNameDto> findAll();
 
     void save(Task task);
 
-    Optional<Task> findById(UUID id);
+    Optional<TaskWithClientNameDto> findById(UUID id);
 
     void delete(UUID id);
 

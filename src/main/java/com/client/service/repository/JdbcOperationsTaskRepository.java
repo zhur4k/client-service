@@ -1,5 +1,6 @@
 package com.client.service.repository;
 
+import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
 import com.client.service.model.TaskStatus;
 import com.client.service.repository.impl.TaskRepository;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<Task> {
+public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<TaskWithClientNameDto> {
     private final JdbcOperations jdbcOperations;
 
     public JdbcOperationsTaskRepository(JdbcOperations jdbcOperations) {
@@ -23,9 +24,13 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     }
 
     @Override
-    public List<Task> findAll() {
-
-        return jdbcOperations.query("select * from t_task", this);
+    public List<TaskWithClientNameDto> findAll() {
+        String sql = """
+            SELECT t.*, c.c_name AS c_client_name
+            FROM t_task t
+            JOIN t_client c ON t.c_client_id = c.id
+           """;
+        return jdbcOperations.query(sql, this);
     }
 
     @Override
@@ -46,8 +51,13 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     }
 
     @Override
-    public Optional<Task> findById(UUID id) {
-        return jdbcOperations.query("select * from t_task where id = ?", new Object[]{id},this)
+    public Optional<TaskWithClientNameDto> findById(UUID id) {
+        String sql = "SELECT t.*, c.c_name AS c_client_name " +
+                "FROM t_task t " +
+                "JOIN t_client c ON t.c_client_id = c.id " +
+                "WHERE t.id = ?";
+
+        return jdbcOperations.query(sql, new Object[]{id},this)
                 .stream().findFirst();
 
     }
@@ -71,9 +81,9 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     }
 
     @Override
-    public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Task(rs.getObject("id",UUID.class),
-                rs.getObject("c_client_id",UUID.class),
+    public TaskWithClientNameDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new TaskWithClientNameDto(rs.getObject("id",UUID.class),
+                rs.getObject("c_client_name",String.class),
                 rs.getObject("c_title",String.class),
                 rs.getObject("c_description",String.class),
                 TaskStatus.valueOf(rs.getString("c_status")),

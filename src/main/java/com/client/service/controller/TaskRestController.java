@@ -2,7 +2,7 @@ package com.client.service.controller;
 
 import com.client.service.dto.TaskCreateDto;
 import com.client.service.dto.TaskUpdateDto;
-import com.client.service.model.Task;
+import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.service.TaskService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -29,13 +29,13 @@ public class TaskRestController {
 
 
     @GetMapping("getAll")
-    public Flux<Task> getAll(){
+    public Flux<TaskWithClientNameDto> getAll(){
         return taskService.getAll()
                 .onErrorResume(ex -> Flux.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch clients")));
     }
 
     @GetMapping("{id}")
-    public Mono<ResponseEntity<Task>> getTaskById(@PathVariable UUID id) {
+    public Mono<ResponseEntity<TaskWithClientNameDto>> getTaskById(@PathVariable UUID id) {
         return taskService.getTaskById(id)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
@@ -52,7 +52,7 @@ public class TaskRestController {
                         .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public Mono<ResponseEntity<Object>> updateTask(
             @Validated @RequestBody Mono<TaskUpdateDto> taskMono
     ){

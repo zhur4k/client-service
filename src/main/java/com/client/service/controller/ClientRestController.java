@@ -51,7 +51,7 @@ public class ClientRestController {
                         .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public Mono<ResponseEntity<Object>> updateClient(
             @Validated @RequestBody Mono<ClientUpdateDto> clientMono
     ){

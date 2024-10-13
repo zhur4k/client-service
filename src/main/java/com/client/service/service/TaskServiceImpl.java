@@ -2,6 +2,7 @@ package com.client.service.service;
 
 import com.client.service.dto.TaskCreateDto;
 import com.client.service.dto.TaskUpdateDto;
+import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
 import com.client.service.repository.impl.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public Mono<Task> getTaskById(UUID id) {
+    public Mono<TaskWithClientNameDto> getTaskById(UUID id) {
         return Mono.just(taskRepository.findById(id).get());
     }
 
@@ -46,7 +47,7 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public Flux<Task> getAll() {
+    public Flux<TaskWithClientNameDto> getAll() {
         return Flux.fromIterable(taskRepository.findAll());
     }
 
