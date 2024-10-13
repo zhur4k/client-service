@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record Task(
         UUID id,
-        UUID userId,
+        UUID clientId,
         String title,
         String description,
         TaskStatus status,

@@ -6,7 +6,8 @@ CREATE TABLE t_client (
     c_updated_at TIMESTAMP
 );
 
-CREATE TYPE task_status AS ENUM ('pending', 'in_progress', 'completed');
+CREATE TYPE task_status AS ENUM ('PENDING', 'IN_PROGRESS', 'COMPLETED');
+
 
 CREATE TABLE t_task (
     id UUID PRIMARY KEY,

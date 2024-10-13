@@ -2,7 +2,6 @@ package com.client.service.service;
 
 import com.client.service.dto.TaskCreateDto;
 import com.client.service.dto.TaskUpdateDto;
-import com.client.service.model.Client;
 import com.client.service.model.Task;
 import com.client.service.repository.impl.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class TaskServiceImpl implements TaskService{
     public Mono<Void> createTask(TaskCreateDto taskCreateDto) {
         return Mono.fromRunnable(() -> taskRepository.save(new Task(
                         UUID.randomUUID(),
-                        taskCreateDto.userId(),
+                        taskCreateDto.clientId(),
                         taskCreateDto.title(),
                         taskCreateDto.description(),
                         taskCreateDto.status(),

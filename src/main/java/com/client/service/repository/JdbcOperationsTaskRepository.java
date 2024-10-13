@@ -31,15 +31,17 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     @Override
     public void save(Task task) {
         this.jdbcOperations.update("""
-            insert into t_task(id, c_user_id, c_title, c_description, status, c_created_at, c_updated_at) values (?, ?, ?, ?, ?, ?,?)
-            """,new Object[]{
-                task.id(),
-                task.userId(),
-                task.title(),
-                task.description(),
-                task.status(),
-                task.createdAt(),
-                task.updatedAt()
+            INSERT INTO t_task (id, c_client_id, c_title, c_description, c_status, c_created_at, c_updated_at) 
+            VALUES (?, ?, ?, ?, ?::task_status, ?, ?)
+            """,
+                new Object[]{
+                        task.id(),
+                        task.clientId(),
+                        task.title(),
+                        task.description(),
+                        task.status().name(),
+                        task.createdAt(),
+                        task.updatedAt()
                 });
     }
 
@@ -58,11 +60,11 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     @Override
     public void update(Task task) {
         jdbcOperations.update("""
-            update t_task set title = ?, description = ?, status = ?, updated_at = ? where id = ?
+            update t_task set c_title = ?, c_description = ?, c_status = ?, c_updated_at = ? where id = ?
         """, new Object[]{
                 task.title(),
                 task.description(),
-                task.status().toString(),
+                task.status().name(),
                 task.updatedAt(),
                 task.id()
         });
@@ -71,10 +73,10 @@ public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<T
     @Override
     public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Task(rs.getObject("id",UUID.class),
-                rs.getObject("c_user_id",UUID.class),
+                rs.getObject("c_client_id",UUID.class),
                 rs.getObject("c_title",String.class),
                 rs.getObject("c_description",String.class),
-                rs.getObject("c_status", TaskStatus.class),
+                TaskStatus.valueOf(rs.getString("c_status")),
                 rs.getObject("c_created_at", LocalDateTime.class),
                 rs.getObject("c_updated_at", LocalDateTime.class));
 
