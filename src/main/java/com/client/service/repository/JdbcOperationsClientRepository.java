@@ -48,7 +48,8 @@ public class JdbcOperationsClientRepository implements ClientRepository, RowMapp
 
     @Override
     public void delete(UUID id) {
-        jdbcOperations.update("delete from t_client where id = ?",id);
+        jdbcOperations.update("delete from t_task where c_user_id = ?", id);
+        jdbcOperations.update("delete from t_client where id = ?", id);
     }
 
     @Override
