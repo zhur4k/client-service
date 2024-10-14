@@ -16,8 +16,8 @@ COPY . /app
 # Очищаем предыдущие сборки Maven
 RUN mvn clean
 
-# Собираем приложение, при этом пропуская выполнение тестов
-RUN mvn package -DskipTests
+# Собираем приложение
+RUN mvn package
 
 # Создаем финальный образ, используя OpenJDK
 FROM openjdk:23 as final
@@ -27,9 +27,6 @@ COPY --from=stage1 /app/target/*.jar app.jar
 
 # Выставляем порт 8081 для внешних подключений
 EXPOSE 8081
-
-# Устанавливаем профиль через переменные окружения
-ENV SPRING_PROFILES_ACTIVE=prod
 
 # Задаем команду для запуска приложения при запуске контейнера
 CMD ["java", "-jar", "app.jar"]
