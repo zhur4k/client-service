@@ -1,10 +1,11 @@
-package com.client.service.service;
+package com.client.service.service.impl;
 
 import com.client.service.dto.TaskCreateDto;
 import com.client.service.dto.TaskUpdateDto;
 import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
-import com.client.service.repository.impl.TaskRepository;
+import com.client.service.repository.TaskRepository;
+import com.client.service.service.TaskService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class TaskServiceImpl implements TaskService{
+public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
 
     public TaskServiceImpl(TaskRepository taskRepository) {

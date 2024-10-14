@@ -1,7 +1,7 @@
-package com.client.service.repository;
+package com.client.service.repository.impl;
 
 import com.client.service.model.Client;
-import com.client.service.repository.impl.ClientRepository;
+import com.client.service.repository.ClientRepository;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

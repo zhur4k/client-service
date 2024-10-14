@@ -1,4 +1,4 @@
-package com.client.service.repository.impl;
+package com.client.service.repository;
 
 import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;

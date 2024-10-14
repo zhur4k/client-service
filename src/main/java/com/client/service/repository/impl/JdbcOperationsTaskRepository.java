@@ -1,9 +1,9 @@
-package com.client.service.repository;
+package com.client.service.repository.impl;
 
 import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
 import com.client.service.model.TaskStatus;
-import com.client.service.repository.impl.TaskRepository;
+import com.client.service.repository.TaskRepository;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
