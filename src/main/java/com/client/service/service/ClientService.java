@@ -10,13 +10,13 @@ import java.util.UUID;
 
 public interface ClientService {
 
-    Mono<Void> createClient(ClientCreateDto clientCreateDto);
+    Mono<Void> createClient(Mono<ClientCreateDto> clientCreateDtoMono);
 
-    Mono<Client> getClientById(UUID id);
+    Mono<Client> getClientById(Mono<UUID> idMono);
 
-    Mono<Void> removeClient(UUID id);
+    Mono<Void> removeClient(Mono<UUID> idMono);
 
     Flux<Client> getAll();
 
-    Mono<Void> updateClient(ClientUpdateDto updateDto);
+    Mono<Void> updateClient(Mono<ClientUpdateDto> updateDtoMono);
 }

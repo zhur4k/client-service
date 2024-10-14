@@ -10,13 +10,13 @@ import java.util.UUID;
 
 public interface TaskService {
 
-    Mono<Void> createTask(TaskCreateDto taskCreateDto);
+    Mono<Void> createTask(Mono<TaskCreateDto> taskCreateDtoMono);
 
-    Mono<TaskWithClientNameDto> getTaskById(UUID id);
+    Mono<TaskWithClientNameDto> getTaskById(Mono<UUID> idMono);
 
-    Mono<Void> removeTask(UUID id);
+    Mono<Void> removeTask(Mono<UUID> idMono);
 
     Flux<TaskWithClientNameDto> getAll();
 
-    Mono<Void> updateTask(TaskUpdateDto updateDto);
+    Mono<Void> updateTask(Mono<TaskUpdateDto> updateDtoMono);
 }

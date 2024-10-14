@@ -33,7 +33,7 @@ public class ClientRestController {
 
     @GetMapping("{id}")
     public Mono<ResponseEntity<Client>> getClientById(@PathVariable UUID id) {
-        return clientService.getClientById(id)
+        return clientService.getClientById(Mono.just(id))
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
                 .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
@@ -43,9 +43,8 @@ public class ClientRestController {
     public Mono<ResponseEntity<Object>> createClient(
             @Validated @RequestBody Mono<ClientCreateDto> clientMono
     ){
-        return clientMono
-                .flatMap(client -> this.clientService.createClient(client)
-                .then(Mono.just(ResponseEntity.ok().build())))
+        return this.clientService.createClient(clientMono)
+                .then(Mono.just(ResponseEntity.ok().build()))
                         .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
@@ -53,16 +52,15 @@ public class ClientRestController {
     public Mono<ResponseEntity<Object>> updateClient(
             @Validated @RequestBody Mono<ClientUpdateDto> clientMono
     ){
-        return clientMono
-                .flatMap(client -> this.clientService.updateClient(client)
-                        .then(Mono.just(ResponseEntity.ok().build())))
+        return this.clientService.updateClient(clientMono)
+                        .then(Mono.just(ResponseEntity.ok().build()))
                 .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
    @DeleteMapping("{id}")
    public Mono<ResponseEntity<Object>> deleteClient(
            @PathVariable UUID id){
-        return clientService.removeClient(id)
+        return clientService.removeClient(Mono.just(id))
                 .then(Mono.just(ResponseEntity.noContent().build()))
                 .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
    }

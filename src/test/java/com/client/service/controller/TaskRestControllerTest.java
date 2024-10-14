@@ -17,6 +17,7 @@ import reactor.test.StepVerifier;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -53,13 +54,13 @@ class TaskRestControllerTest{
     }
 
     @Test
-    void getTaskById_ReturnStatusOk(){
+    void getTaskById_ReturnStatusOk() {
         // given
         UUID id = UUID.randomUUID();
         Mono<TaskWithClientNameDto> task = Mono.just(
-                new TaskWithClientNameDto(id, "Test Client", "Task", "Description",  TaskStatus.IN_PROGRESS,null,null)
+                new TaskWithClientNameDto(id, "Test Client", "Task", "Description", TaskStatus.IN_PROGRESS, null, null)
         );
-        doReturn(task).when(this.taskService).getTaskById(id);
+        doReturn(task).when(this.taskService).getTaskById(any(Mono.class));
 
         // when
         Mono<ResponseEntity<TaskWithClientNameDto>> result = this.controller.getTaskById(id);
@@ -69,17 +70,18 @@ class TaskRestControllerTest{
                 .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK) &&
                         response.getBody().id().equals(id))
                 .verifyComplete();
-        verify(taskService).getTaskById(id);
+
+        verify(taskService).getTaskById(any(Mono.class));
     }
 
     @Test
     void createTask_ReturnStatusOk() {
         // given
-        TaskCreateDto newTaskDto = new TaskCreateDto(UUID.randomUUID(), "Task Title", "Task Description",  TaskStatus.IN_PROGRESS);
+        Mono<TaskCreateDto> newTaskDto = Mono.just(new TaskCreateDto(UUID.randomUUID(), "Task Title", "Task Description",  TaskStatus.IN_PROGRESS));
         doReturn(Mono.just(newTaskDto)).when(taskService).createTask(newTaskDto);
 
         // when
-        Mono<ResponseEntity<Object>> result = this.controller.createTask(Mono.just(newTaskDto));
+        Mono<ResponseEntity<Object>> result = this.controller.createTask(newTaskDto);
 
         // then
         StepVerifier.create(result)
@@ -93,11 +95,11 @@ class TaskRestControllerTest{
     void updateTask_ReturnStatusOk() {
         // given
         UUID id = UUID.randomUUID();
-        TaskUpdateDto updatedTask = new TaskUpdateDto(id, "Updated Task Title", "Updated Description", TaskStatus.IN_PROGRESS);
+        Mono<TaskUpdateDto> updatedTask = Mono.just(new TaskUpdateDto(id, "Updated Task Title", "Updated Description", TaskStatus.IN_PROGRESS));
         doReturn(Mono.just(updatedTask)).when(taskService).updateTask(updatedTask);
 
         // when
-        Mono<ResponseEntity<Object>> result = this.controller.updateTask(Mono.just(updatedTask));
+        Mono<ResponseEntity<Object>> result = this.controller.updateTask(updatedTask);
 
         // then
         StepVerifier.create(result)
@@ -111,7 +113,7 @@ class TaskRestControllerTest{
     void deleteTask_ReturnsNoContent() {
         // given
         UUID id = UUID.randomUUID();
-        doReturn(Mono.empty()).when(this.taskService).removeTask(id);
+        doReturn(Mono.empty()).when(this.taskService).removeTask(any(Mono.class));
 
         // when
         Mono<ResponseEntity<Object>> result = this.controller.deleteTask(id);
@@ -121,6 +123,6 @@ class TaskRestControllerTest{
                 .expectNext(ResponseEntity.noContent().build())
                 .verifyComplete();
 
-        verify(this.taskService).removeTask(id);
+        verify(this.taskService).removeTask(any(Mono.class));
     }
 }

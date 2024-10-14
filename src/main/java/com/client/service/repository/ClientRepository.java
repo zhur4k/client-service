@@ -1,20 +1,20 @@
 package com.client.service.repository;
 
 import com.client.service.model.Client;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ClientRepository {
 
-    List<Client> findAll();
+    Flux<Client> findAll();
 
-    void save(Client client);
+    Mono<Void> save(Mono<Client> clientMono);
 
-    Optional<Client> findById(UUID id);
+    Mono<Client> findById(Mono<UUID> idMono);
 
-    void delete(UUID id);
+    Mono<Void> delete(Mono<UUID> idMono);
 
-    void update(Client client);
+    Mono<Void> update(Mono<Client> clientMono);
 }

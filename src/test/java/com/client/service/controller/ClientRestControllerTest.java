@@ -6,6 +6,7 @@ import com.client.service.model.Client;
 import com.client.service.service.ClientService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +19,8 @@ import reactor.test.StepVerifier;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -31,7 +34,7 @@ public class ClientRestControllerTest {
     private ClientRestController controller;
 
     @Test
-    void getAll_ReturnClients(){
+    void getAll_ReturnClients() {
         // given
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
@@ -54,11 +57,11 @@ public class ClientRestControllerTest {
     }
 
     @Test
-    void getClientById_ReturnStatusOk(){
+    void getClientById_ReturnStatusOk() {
         // given
         UUID id = UUID.randomUUID();
-        Mono<Client> client = Mono.just(new Client(id,null,null,null,null,null));
-        doReturn(client).when(this.clientService).getClientById(id);
+        Mono<Client> client = Mono.just(new Client(id, null, null, null, null, null));
+        doReturn(client).when(this.clientService).getClientById(any(Mono.class));
 
         // when
         Mono<ResponseEntity<Client>> result = this.controller.getClientById(id);
@@ -68,7 +71,8 @@ public class ClientRestControllerTest {
                 .expectNextMatches(verify -> verify.getStatusCode().equals(HttpStatus.OK) &&
                         verify.getBody().id().equals(id))
                 .verifyComplete();
-        verify(clientService).getClientById(id);
+
+        verify(clientService).getClientById(any(Mono.class));
     }
 
     @Test
@@ -77,11 +81,11 @@ public class ClientRestControllerTest {
         String name = "test_name";
         String email = "test_email";
         String phone = "test_phone";
-        ClientCreateDto newClientMono = new ClientCreateDto(name, email, phone);
+        Mono<ClientCreateDto> newClientMono = Mono.just(new ClientCreateDto(name, email, phone));
         doReturn(Mono.just(newClientMono)).when(clientService).createClient(newClientMono);
 
         // when
-        Mono<ResponseEntity<Object>> result = this.controller.createClient(Mono.just(newClientMono));
+        Mono<ResponseEntity<Object>> result = this.controller.createClient(newClientMono);
 
         // then
         StepVerifier.create(result)
@@ -95,11 +99,11 @@ public class ClientRestControllerTest {
     void updateClient_ReturnClients() {
         // given
         UUID id = UUID.randomUUID();
-        ClientUpdateDto updatedClient = new ClientUpdateDto(id, null, null, null);
+        Mono<ClientUpdateDto> updatedClient = Mono.just(new ClientUpdateDto(id, null, null, null));
         doReturn(Mono.just(updatedClient)).when(clientService).updateClient(updatedClient);
 
         // when
-        Mono<ResponseEntity<Object>> result = this.controller.updateClient(Mono.just(updatedClient));
+        Mono<ResponseEntity<Object>> result = this.controller.updateClient(updatedClient);
 
         // then
         StepVerifier.create(result)
@@ -113,7 +117,9 @@ public class ClientRestControllerTest {
     void deleteClient_ReturnsNoContent() {
         // given
         UUID id = UUID.randomUUID();
-        doReturn(Mono.empty()).when(this.clientService).removeClient(id);
+        ArgumentCaptor<Mono<UUID>> captor = ArgumentCaptor.forClass(Mono.class);
+
+        doReturn(Mono.empty()).when(this.clientService).removeClient(any(Mono.class));
 
         // when
         Mono<ResponseEntity<Object>> result = this.controller.deleteClient(id);
@@ -123,6 +129,7 @@ public class ClientRestControllerTest {
                 .expectNext(ResponseEntity.noContent().build())
                 .verifyComplete();
 
-        verify(this.clientService).removeClient(id);
+        verify(this.clientService).removeClient(captor.capture());
+        captor.getValue().subscribe(actualId -> assertEquals(id, actualId));
     }
 }

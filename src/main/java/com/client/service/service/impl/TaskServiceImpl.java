@@ -8,6 +8,7 @@ import com.client.service.repository.TaskRepository;
 import com.client.service.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -20,9 +21,12 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    private final TransactionalOperator transactionalOperator;
+
     @Override
-    public Mono<Void> createTask(TaskCreateDto taskCreateDto) {
-        return Mono.fromRunnable(() -> taskRepository.save(new Task(
+    public Mono<Void> createTask(Mono<TaskCreateDto> taskCreateDtoMono) {
+        return taskCreateDtoMono.flatMap(taskCreateDto -> taskRepository.save(
+                Mono.just(new Task(
                         UUID.randomUUID(),
                         taskCreateDto.clientId(),
                         taskCreateDto.title(),
@@ -30,39 +34,40 @@ public class TaskServiceImpl implements TaskService {
                         taskCreateDto.status(),
                         LocalDateTime.now(),
                         LocalDateTime.now()
-                )))
-                .then();
+        ))).then());
     }
 
     @Override
-    public Mono<TaskWithClientNameDto> getTaskById(UUID id) {
-        return Mono.just(taskRepository.findById(id).get());
+    public Mono<TaskWithClientNameDto> getTaskById(Mono<UUID> idMono) {
+        return transactionalOperator.transactional(
+                taskRepository.findById(idMono)
+        );
     }
 
     @Override
-    public Mono<Void> removeTask(UUID id) {
-        return Mono.fromRunnable(() -> taskRepository.delete(id))
-                .then();
+    public Mono<Void> removeTask(Mono<UUID> idMono) {
+        return transactionalOperator.transactional(
+                taskRepository.delete(idMono)
+        ).then();
     }
 
     @Override
     public Flux<TaskWithClientNameDto> getAll() {
-        return Flux.fromIterable(taskRepository.findAll());
+        return taskRepository.findAll();
     }
 
     @Override
-    public Mono<Void> updateTask(TaskUpdateDto updateDto) {
-        Task task = new Task(
-                updateDto.id(),
-                null,
-                updateDto.title(),
-                updateDto.description(),
-                updateDto.status(),
-                null,
-                LocalDateTime.now()
-        );
-
-        return Mono.fromRunnable(() -> taskRepository.update(task))
-                .then();
+    public Mono<Void> updateTask(Mono<TaskUpdateDto> updateDtoMono) {
+        return updateDtoMono.flatMap(updateDto -> taskRepository.update(
+                Mono.just(
+                        new Task(
+                        updateDto.id(),
+                        null,
+                        updateDto.title(),
+                        updateDto.description(),
+                        updateDto.status(),
+                        null,
+                        LocalDateTime.now()
+                )))).then();
     }
 }

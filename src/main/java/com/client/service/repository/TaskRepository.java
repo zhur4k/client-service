@@ -2,20 +2,20 @@ package com.client.service.repository;
 
 import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface TaskRepository {
 
-    List<TaskWithClientNameDto> findAll();
+    Flux<TaskWithClientNameDto> findAll();
 
-    void save(Task task);
+    Mono<Void> save(Mono<Task> taskMono);
 
-    Optional<TaskWithClientNameDto> findById(UUID id);
+    Mono<TaskWithClientNameDto> findById(Mono<UUID> idMono);
 
-    void delete(UUID id);
+    Mono<Void> delete(Mono<UUID> idMono);
 
-    void update(Task task);
+    Mono<Void> update(Mono<Task> taskMono);
 }

@@ -33,7 +33,7 @@ public class TaskRestController {
 
     @GetMapping("{id}")
     public Mono<ResponseEntity<TaskWithClientNameDto>> getTaskById(@PathVariable UUID id) {
-        return taskService.getTaskById(id)
+        return taskService.getTaskById(Mono.just(id))
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
                 .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
@@ -43,9 +43,8 @@ public class TaskRestController {
     public Mono<ResponseEntity<Object>> createTask(
             @Validated @RequestBody Mono<TaskCreateDto> taskMono
     ){
-        return taskMono
-                .flatMap(task -> this.taskService.createTask(task)
-                .then(Mono.just(ResponseEntity.ok().build())))
+        return this.taskService.createTask(taskMono)
+                .then(Mono.just(ResponseEntity.ok().build()))
                         .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
@@ -53,16 +52,15 @@ public class TaskRestController {
     public Mono<ResponseEntity<Object>> updateTask(
             @Validated @RequestBody Mono<TaskUpdateDto> taskMono
     ){
-        return taskMono
-                .flatMap(task -> this.taskService.updateTask(task)
-                        .then(Mono.just(ResponseEntity.ok().build())))
+        return this.taskService.updateTask(taskMono)
+                        .then(Mono.just(ResponseEntity.ok().build()))
                 .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
    @DeleteMapping("{id}")
    public Mono<ResponseEntity<Object>> deleteTask(
            @PathVariable UUID id){
-        return taskService.removeTask(id)
+        return taskService.removeTask(Mono.just(id))
                 .then(Mono.just(ResponseEntity.noContent().build()))
                 .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
    }
