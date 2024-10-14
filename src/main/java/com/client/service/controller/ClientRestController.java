@@ -6,6 +6,7 @@ import com.client.service.model.Client;
 import com.client.service.service.ClientService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,13 +20,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("clients")
 @OpenAPIDefinition(info = @Info(title = "Client Service API", version = "1.0"))
+@RequiredArgsConstructor
 public class ClientRestController {
 
     private final ClientService clientService;
-
-    public ClientRestController(ClientService clientService) {
-        this.clientService = clientService;
-    }
 
     @GetMapping("getAll")
     public Flux<Client> getAll(){

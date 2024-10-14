@@ -3,9 +3,9 @@ package com.client.service.service.impl;
 import com.client.service.dto.ClientCreateDto;
 import com.client.service.dto.ClientUpdateDto;
 import com.client.service.model.Client;
-import com.client.service.repository.impl.JdbcOperationsClientRepository;
 import com.client.service.repository.ClientRepository;
 import com.client.service.service.ClientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,12 +14,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
-    private final ClientRepository clientRepository;
 
-    public ClientServiceImpl(JdbcOperationsClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
+    private final ClientRepository clientRepository;
 
     @Override
     public Mono<Void> createClient(ClientCreateDto clientCreateDto) {

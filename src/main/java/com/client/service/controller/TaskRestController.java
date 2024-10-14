@@ -6,6 +6,7 @@ import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.service.TaskService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,14 +20,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("tasks")
 @OpenAPIDefinition(info = @Info(title = "Task Service API", version = "1.0"))
+@RequiredArgsConstructor
 public class TaskRestController {
 
     private final TaskService taskService;
-
-    public TaskRestController(TaskService taskService) {
-        this.taskService = taskService;
-    }
-
 
     @GetMapping("getAll")
     public Flux<TaskWithClientNameDto> getAll(){

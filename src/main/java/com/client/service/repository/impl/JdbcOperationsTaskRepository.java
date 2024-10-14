@@ -4,6 +4,7 @@ import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
 import com.client.service.model.TaskStatus;
 import com.client.service.repository.TaskRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,12 +17,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcOperationsTaskRepository implements TaskRepository, RowMapper<TaskWithClientNameDto> {
-    private final JdbcOperations jdbcOperations;
 
-    public JdbcOperationsTaskRepository(JdbcOperations jdbcOperations) {
-        this.jdbcOperations = jdbcOperations;
-    }
+    private final JdbcOperations jdbcOperations;
 
     @Override
     public List<TaskWithClientNameDto> findAll() {

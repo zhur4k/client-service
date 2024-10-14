@@ -6,6 +6,7 @@ import com.client.service.dto.TaskWithClientNameDto;
 import com.client.service.model.Task;
 import com.client.service.repository.TaskRepository;
 import com.client.service.service.TaskService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,13 +15,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
+
     private final TaskRepository taskRepository;
-
-    public TaskServiceImpl(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
-
 
     @Override
     public Mono<Void> createTask(TaskCreateDto taskCreateDto) {

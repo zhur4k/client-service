@@ -2,6 +2,7 @@ package com.client.service.repository.impl;
 
 import com.client.service.model.Client;
 import com.client.service.repository.ClientRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -14,12 +15,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcOperationsClientRepository implements ClientRepository, RowMapper<Client> {
-    private final JdbcOperations jdbcOperations;
 
-    public JdbcOperationsClientRepository(JdbcOperations jdbcOperations) {
-        this.jdbcOperations = jdbcOperations;
-    }
+    private final JdbcOperations jdbcOperations;
 
     @Override
     public List<Client> findAll() {
